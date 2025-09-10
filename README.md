@@ -56,6 +56,22 @@ Demonstrates advanced concurrency patterns for distributed processing:
 go run fanin_fanout.go
 ```
 
+### 5. Advanced Concurrency Patterns (`advanced.go`)
+Covers production-ready concurrency patterns and resilience techniques:
+- Atomic operations with `sync/atomic` for lock-free programming
+- Rate limiting with token bucket algorithm
+- Graceful shutdown patterns for services
+- Advanced timeout handling with context
+- Pub/Sub (publish-subscribe) pattern for event-driven systems
+- Circuit breaker pattern for fault tolerance
+- Retry patterns with exponential backoff
+- Semaphore pattern for advanced resource control
+- Request-Response pattern for synchronous communication
+
+```bash
+go run advanced.go
+```
+
 ## Getting Started
 
 1. Clone this repository:
@@ -70,6 +86,7 @@ go run waitgroups.go
 go run mutex.go
 go run sync.go
 go run fanin_fanout.go
+go run advanced.go
 ```
 
 3. Or get usage information:
@@ -87,6 +104,14 @@ go run main.go
 - **Context**: Cancellation and timeout handling
 - **Fan-out/Fan-in**: Patterns for distributing and collecting work
 - **Pipeline Processing**: Chaining processing stages with channels
+- **Atomic Operations**: Lock-free programming with sync/atomic
+- **Rate Limiting**: Token bucket algorithm for controlling request rates
+- **Circuit Breaker**: Fault tolerance pattern for resilient systems
+- **Pub/Sub**: Event-driven communication pattern
+- **Graceful Shutdown**: Proper service termination handling
+- **Retry Patterns**: Exponential backoff for handling transient failures
+- **Semaphores**: Advanced resource control and limiting
+- **Request-Response**: Synchronous communication over channels
 
 ## Best Practices Demonstrated
 
@@ -103,6 +128,7 @@ go run main.go
 2. Move to `mutex.go` to learn about protecting shared resources
 3. Explore `sync.go` for advanced synchronization patterns
 4. Study `fanin_fanout.go` for complex distributed processing patterns
+5. Master `advanced.go` for production-ready resilience and performance patterns
 
 Each file is self-contained and can be run independently to observe the behavior of different concurrency patterns.
 
