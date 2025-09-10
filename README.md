@@ -65,6 +65,8 @@ Covers production-ready concurrency patterns and resilience techniques:
 - Pub/Sub (publish-subscribe) pattern for event-driven systems
 - Circuit breaker pattern for fault tolerance
 - Retry patterns with exponential backoff
+- Semaphore pattern for advanced resource control
+- Request-Response pattern for synchronous communication
 
 ```bash
 go run advanced.go
@@ -108,6 +110,8 @@ go run main.go
 - **Pub/Sub**: Event-driven communication pattern
 - **Graceful Shutdown**: Proper service termination handling
 - **Retry Patterns**: Exponential backoff for handling transient failures
+- **Semaphores**: Advanced resource control and limiting
+- **Request-Response**: Synchronous communication over channels
 
 ## Best Practices Demonstrated
 

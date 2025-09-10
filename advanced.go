@@ -564,6 +564,168 @@ func retryPatternExample() {
 	fmt.Println()
 }
 
+// Example 8: Semaphore Pattern for Resource Control
+type Semaphore struct {
+	permits chan struct{}
+}
+
+func NewSemaphore(maxConcurrency int) *Semaphore {
+	return &Semaphore{
+		permits: make(chan struct{}, maxConcurrency),
+	}
+}
+
+func (s *Semaphore) Acquire() {
+	s.permits <- struct{}{}
+}
+
+func (s *Semaphore) Release() {
+	<-s.permits
+}
+
+func (s *Semaphore) TryAcquire() bool {
+	select {
+	case s.permits <- struct{}{}:
+		return true
+	default:
+		return false
+	}
+}
+
+func semaphoreExample() {
+	fmt.Println("=== Semaphore Pattern Example ===")
+	
+	// Create a semaphore that allows maximum 3 concurrent operations
+	sem := NewSemaphore(3)
+	
+	var wg sync.WaitGroup
+	
+	// Start 10 goroutines, but only 3 can run concurrently
+	for i := 1; i <= 10; i++ {
+		wg.Add(1)
+		go func(id int) {
+			defer wg.Done()
+			
+			fmt.Printf("Task %d waiting for permit...\n", id)
+			sem.Acquire()
+			fmt.Printf("Task %d acquired permit, working...\n", id)
+			
+			// Simulate work
+			time.Sleep(time.Duration(rand.Intn(1000)+500) * time.Millisecond)
+			
+			fmt.Printf("Task %d completed, releasing permit\n", id)
+			sem.Release()
+		}(i)
+	}
+	
+	wg.Wait()
+	fmt.Println("All tasks completed")
+	
+	// Demonstrate TryAcquire
+	fmt.Println("\nTesting non-blocking acquire:")
+	for i := 1; i <= 5; i++ {
+		if sem.TryAcquire() {
+			fmt.Printf("  Successfully acquired permit %d\n", i)
+		} else {
+			fmt.Printf("  Failed to acquire permit %d (would block)\n", i)
+		}
+	}
+	
+	// Release the permits we acquired
+	for i := 1; i <= 3; i++ {
+		sem.Release()
+	}
+	fmt.Println()
+}
+
+// Example 9: Request-Response Pattern
+type Request struct {
+	ID       int
+	Data     string
+	Response chan string
+}
+
+type RequestHandler struct {
+	requests chan Request
+	workers  int
+}
+
+func NewRequestHandler(workers int) *RequestHandler {
+	rh := &RequestHandler{
+		requests: make(chan Request, 100),
+		workers:  workers,
+	}
+	
+	// Start worker goroutines
+	for i := 0; i < workers; i++ {
+		go rh.worker(i)
+	}
+	
+	return rh
+}
+
+func (rh *RequestHandler) worker(id int) {
+	for req := range rh.requests {
+		// Process the request
+		result := fmt.Sprintf("Worker %d processed request %d: %s -> PROCESSED", 
+			id, req.ID, req.Data)
+		
+		// Simulate processing time
+		time.Sleep(time.Duration(rand.Intn(200)+100) * time.Millisecond)
+		
+		// Send response back
+		req.Response <- result
+		close(req.Response)
+	}
+}
+
+func (rh *RequestHandler) HandleRequest(id int, data string) string {
+	responseChan := make(chan string, 1)
+	
+	req := Request{
+		ID:       id,
+		Data:     data,
+		Response: responseChan,
+	}
+	
+	// Send request (non-blocking due to buffered channel)
+	select {
+	case rh.requests <- req:
+		// Wait for response
+		return <-responseChan
+	default:
+		return fmt.Sprintf("Request %d rejected: handler busy", id)
+	}
+}
+
+func (rh *RequestHandler) Close() {
+	close(rh.requests)
+}
+
+func requestResponseExample() {
+	fmt.Println("=== Request-Response Pattern Example ===")
+	
+	handler := NewRequestHandler(3) // 3 workers
+	defer handler.Close()
+	
+	var wg sync.WaitGroup
+	
+	// Send multiple requests concurrently
+	for i := 1; i <= 8; i++ {
+		wg.Add(1)
+		go func(id int) {
+			defer wg.Done()
+			
+			data := fmt.Sprintf("data_%d", id)
+			response := handler.HandleRequest(id, data)
+			fmt.Printf("Request %d response: %s\n", id, response)
+		}(i)
+	}
+	
+	wg.Wait()
+	fmt.Println()
+}
+
 func main() {
 	fmt.Println("Go Advanced Concurrency Patterns")
 	fmt.Println("================================")
@@ -576,6 +738,8 @@ func main() {
 	pubSubExample()
 	circuitBreakerExample()
 	retryPatternExample()
+	semaphoreExample()
+	requestResponseExample()
 
 	fmt.Println("All advanced concurrency examples completed!")
 }
