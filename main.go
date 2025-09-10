@@ -17,6 +17,7 @@ func main() {
 		fmt.Println("  mutex.go         - Mutex and RWMutex examples")
 		fmt.Println("  sync.go          - General synchronization primitives")
 		fmt.Println("  fanin_fanout.go  - Fan-in/Fan-out concurrency patterns")
+		fmt.Println("  advanced.go      - Advanced patterns (atomics, rate limiting, pub/sub, circuit breaker)")
 		fmt.Println()
 		fmt.Println("Example:")
 		fmt.Println("  go run waitgroups.go")
