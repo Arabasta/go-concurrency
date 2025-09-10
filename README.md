@@ -1,6 +1,8 @@
 # Go Concurrency Examples
 todo: split into multiple files
-every 
+every topic should be in its own package iwth a readme 
+
+
 A comprehensive collection of Go concurrency patterns, notes, and examples demonstrating various synchronization primitives and concurrent programming techniques.
 
 ## Overview
