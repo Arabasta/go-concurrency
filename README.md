@@ -1,5 +1,5 @@
 # Go Concurrency Examples
-
+todo: 
 A comprehensive collection of Go concurrency patterns, notes, and examples demonstrating various synchronization primitives and concurrent programming techniques.
 
 ## Overview
